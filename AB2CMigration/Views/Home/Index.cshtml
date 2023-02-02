@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form method="post" enctype="multipart/form-data"  action="@Url.Action("Migration","Home")">
+    <input type="file" name="file" />
+    <button type="submit">Migration</button>
+</form>
+
