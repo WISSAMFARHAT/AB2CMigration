@@ -5,28 +5,37 @@ using OfficeOpenXml;
 using System.Data;
 
 
-namespace AB2CMigration.Controllers
+namespace AB2CMigration.Controllers;
+
+[Route("")]
+public class HomeController : BaseController
 {
+
     [Route("")]
-    public class HomeController : Controller
+    public async Task<IActionResult> Index(string? message,string color="red")
     {
+        CloudPage();
 
-        [Route("")]
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        [Route("migration")]
-        public async Task<IActionResult> Migration(IFormFile file)
+        ViewBag.Message = message;
+        ViewBag.color = color;
+
+        return View();
+    }
+    
+
+    [HttpPost]
+    [Route("MigrationExport")]
+    public async Task<IActionResult> MigrationExport(IFormFile file)
+    {
+        try
         {
             if (file is null)
-                throw new ArgumentNullException(nameof(file));
+                return RedirectToAction("Index", new { message = "Please put a file path" });
 
             List<UserModel> users = new();
 
-            using (var stream = new MemoryStream())
+            using (MemoryStream stream = new())
             {
                 file.CopyTo(stream);
                 stream.Position = 0;
@@ -34,33 +43,94 @@ namespace AB2CMigration.Controllers
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 ExcelPackage pck = new(stream);
 
-                var worksheet = pck.Workbook.Worksheets[0];
+                ExcelWorksheet worksheet = pck.Workbook.Worksheets[0];
 
                 users = ConvertToUsersModel(worksheet);
             }
 
+
             foreach (UserModel user in users)
                 await GraphProvider.Cosmos.CreateUser(user);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = "Done",color="green" });
         }
-
-        private static List<UserModel> ConvertToUsersModel(ExcelWorksheet worksheet)
+        catch (Exception ex)
         {
-            List<UserModel> users = new();
 
-            for (int i = 2; i < worksheet.Dimension.End.Row - 1; i++)
-                users.Add(new()
-                {
-                    DisplayName = worksheet.Cells[i, 1].Value?.ToString(),
-                    FirstName = worksheet.Cells[i, 2].Value?.ToString(),
-                    LastName = worksheet.Cells[i, 3].Value?.ToString(),
-                    ID = worksheet.Cells[i, 4].Value?.ToString(),
-                    Email = worksheet.Cells[i, 5].Value?.ToString(),
-                });
-
-            return users;
+            return RedirectToAction("Index", new { message = ex.Message });
         }
     }
 
+    [HttpPost]
+    [Route("MigrationGraph")]
+    public async Task<IActionResult> MigrationGraph()
+    {
+        try
+        {
+
+            List<UserModel> users = await GraphProvider.Graph.GetAllUsers();
+
+
+            foreach (UserModel user in users)
+                await GraphProvider.Cosmos.CreateUser(user);
+
+            return RedirectToAction("Index", new { message = "Done", color = "green" });
+
+        }
+        catch (Exception ex)
+        {
+            return RedirectToAction("Index", new { message = ex.Message });
+        }
+
+
+    }
+
+    private static List<UserModel> ConvertToUsersModel(ExcelWorksheet worksheet)
+    {
+        List<UserModel> users = new();
+
+        int indexDisplayName = 0;
+        int indexFirstName = 0;
+        int indexLastName = 0;
+        int indexID = 0;
+        int indexEmail = 0;
+
+        for (int i = 1; i <= worksheet.Dimension.End.Column; i++)
+        {
+            string test = worksheet.Cells[1, i].Value?.ToString().ToLower();
+            switch (worksheet.Cells[1, i].Value?.ToString().ToLower())
+            {
+                case "displayname":
+                    indexDisplayName = i;
+                    break;
+                case "surname":
+                    indexFirstName = i;
+                    break;
+                case "givenname":
+                    indexLastName = i;
+                    break;
+                case "objectid":
+                    indexID = i;
+                    break;
+                case "alternateemailaddress":
+                    indexEmail = i;
+                    break;
+
+            }
+        }
+
+        for (int i = 2; i <= worksheet.Dimension.End.Row; i++)
+            users.Add(new()
+            {
+                DisplayName = worksheet.Cells[i, indexDisplayName].Value?.ToString(),
+                FirstName = worksheet.Cells[i, indexFirstName].Value?.ToString(),
+                LastName = worksheet.Cells[i, indexLastName].Value?.ToString(),
+                ID = worksheet.Cells[i, indexID].Value?.ToString(),
+                Email = worksheet.Cells[i, indexEmail].Value?.ToString(),
+            });
+
+        return users;
+    }
 }
+
+

@@ -1,17 +1,14 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AB2CMigration</title>
-    <link rel="stylesheet" href="~/AB2CMigration.styles.css" asp-append-version="true" />
+    <component type="typeof(CloudHeadInit)" param-CloudPage="@(ViewData["CloudPageStatic"])" render-mode="Static" />
 </head>
 <body>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-        @await RenderSectionAsync("Scripts", required: false)
+    <partial name="Compoments/Header" />
+
+    <main>
+        @RenderBody()
+    </main>
+
 </body>
 </html>

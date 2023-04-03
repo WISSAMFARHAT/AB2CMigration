@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+var exports = {};
+var file = document.querySelector("#file");
+var filename = document.querySelector(".filename");
+file.addEventListener("change", function (event) {
+    var selectedFile = event.target.files[0];
+    filename.innerHTML = selectedFile.name;
+});
 
-// Write your JavaScript code.
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNpdGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsSUFBTSxJQUFJLEdBQUcsUUFBUSxDQUFDLGFBQWEsQ0FBQyxPQUFPLENBQXdCLENBQUM7QUFDcEUsSUFBTSxRQUFRLEdBQUcsUUFBUSxDQUFDLGFBQWEsQ0FBQyxXQUFXLENBQW9CLENBQUM7QUFFeEUsSUFBSSxDQUFDLGdCQUFnQixDQUFDLFFBQVEsRUFBRSxVQUFDLEtBQUs7SUFDbEMsSUFBTSxZQUFZLEdBQUksS0FBSyxDQUFDLE1BQTJCLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFDO0lBQ2pFLFFBQVEsQ0FBQyxTQUFTLEdBQUcsWUFBWSxDQUFDLElBQUksQ0FBQztBQUMzQyxDQUFDLENBQUMsQ0FBQSIsImZpbGUiOiJzaXRlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgZmlsZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIjZmlsZVwiKSBhcyBIVE1MRmllbGRTZXRFbGVtZW50O1xyXG5jb25zdCBmaWxlbmFtZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuZmlsZW5hbWVcIikgYXMgSFRNTFNwYW5FbGVtZW50O1xyXG5cclxuZmlsZS5hZGRFdmVudExpc3RlbmVyKFwiY2hhbmdlXCIsIChldmVudCkgPT4ge1xyXG4gICAgY29uc3Qgc2VsZWN0ZWRGaWxlID0gKGV2ZW50LnRhcmdldCBhcyBIVE1MSW5wdXRFbGVtZW50KS5maWxlc1swXTtcclxuICAgIGZpbGVuYW1lLmlubmVySFRNTCA9IHNlbGVjdGVkRmlsZS5uYW1lO1xyXG59KSJdfQ==

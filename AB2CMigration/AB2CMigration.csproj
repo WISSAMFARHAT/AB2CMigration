@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>537ac622-5154-431c-b4f3-a66a943f661f</UserSecretsId>
@@ -12,10 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\Compoments\Header.cshtml" />
     <None Include="wwwroot\exportUser.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngryMonkey.CloudWeb.MVC" Version="1.0.4" />
     <PackageReference Include="EPPlus" Version="6.2.0" />
   </ItemGroup>
 

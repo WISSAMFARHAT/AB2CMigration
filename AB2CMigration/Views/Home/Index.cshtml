@@ -1,9 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+<section class="home">
+    <article>
+        <p class="home-title">You can use an export file <span>or</span>  Microsoft Graph </p>
+        <span class="home-error" style="color:@ViewBag.color">@ViewBag.Message</span>
+        <div class="home-body">
+            <form method="post" enctype="multipart/form-data" action="@Url.Action("MigrationExport","Home")">
+                <label for="file">Choose a file:<span class="filename"></span></label>
+                <input type="file" id="file" name="file">
+                <button type="submit">Export</button>
+            </form>
+            <form method="post" action="@Url.Action("MigrationGraph","Home")">
+                <button type="submit">Microsot Graph </button>
+            </form>
+        </div>
+    </article>
+</section>
 
-<form method="post" enctype="multipart/form-data"  action="@Url.Action("Migration","Home")">
-    <input type="file" name="file" />
-    <button type="submit">Migration</button>
-</form>
 

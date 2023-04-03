@@ -1,9 +1,27 @@
+using AngryMonkey.CloudWeb;
 using ConnectionB2C;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+CloudWebConfig cloudWeb = new()
+{
+    PageDefaults = new()
+    {
+        Title = "AB2Migration",
+        Bundles = new()
+         {
+             new(){ Source = "css/site.css"},
+             new(){ Source = "css/index.css"},
+             new(){ Source = "js/site.js"},
+         },
+    },
+    TitleSuffix = " - AB2Migration",
+};
+
+builder.Services.AddCloudWeb(cloudWeb);
 
 
 var app = builder.Build();

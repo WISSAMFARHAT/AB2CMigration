@@ -1,5 +1,6 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace ConnectionB2C
         private string TenantId { get; set; }// CoreConfig.Configuration["GraphB2C:TenantId"];
         private string ClientSecret { get; set; }// CoreConfig.Configuration["GraphB2C:CLientSecret"];
         private static IConfidentialClientApplication _clientApplication { get; set; }
+
 
         private static string[] _scopes = new string[] { "https://graph.microsoft.com/.default" };
 
@@ -38,6 +40,7 @@ namespace ConnectionB2C
 
             var authResult = await _clientApplication.AcquireTokenForClient(_scopes).ExecuteAsync();
 
+
             MicrosoftGraph = new GraphServiceClient(new DelegateAuthenticationProvider(
                 (requestMessage) =>
                     {
@@ -52,10 +55,13 @@ namespace ConnectionB2C
 
         public async Task<List<UserModel>> GetAllUsers()
         {
+
             IGraphServiceUsersCollectionPage allUsers = await MicrosoftGraph.Users
                 .Request()
                 .Top(999)
+                .Select("id,displayname,createddatetime,mail,othermails,givenname,surname,authentication,authenticationinfo,outlook")
                 .GetAsync();
+
             List<UserModel> users = new();
 
             foreach (User? user in allUsers)
@@ -63,9 +69,11 @@ namespace ConnectionB2C
                 UserModel newUser = new()
                 {
                     ID = user.Id,
-                    Email = user.Mail,
+                    Email = user.OtherMails.First(),
                     FirstName = user.GivenName,
-                    LastName = user.Surname
+                    LastName = user.Surname,
+                    DisplayName=user.DisplayName
+                    
                 };
 
                 users.Add(newUser);
@@ -75,6 +83,14 @@ namespace ConnectionB2C
 
         }
 
+        //public async Task<UserModel> FetchUser(string id)
+        //{
+        //    var user = await MicrosoftGraph.Users[id]
+        //        .Request()
+        //        .Select("authentication")
+        //        .GetAsync();
 
+        //    return new();
+        //}
     }
 }

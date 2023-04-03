@@ -1,0 +1,84 @@
+:root {
+  --primaryColor: #2e3191;
+  --primaryColorOpacity: #2e3191e6;
+  --secondaryColor: #42a7de;
+  --greyColor: #999FAE;
+  --redColor: #ed1c24;
+  --blackColor: #171717;
+  --whiteColor: #fff;
+  --primaryColorFaded: #42a7de4f;
+  --duration: 0.4s ease-in-out;
+  --headerHeight: 60px;
+  --headerbgColor: transparent;
+  --maxWidth: 1200px;
+}
+body main .home > article {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin-inline: auto;
+}
+body main .home-title {
+  font-size: 1.5rem;
+  color: var(--primaryColor);
+  text-align: center;
+}
+body main .home-title > span {
+  font-weight: bold;
+  color: var(--primaryColor);
+  text-transform: capitalize;
+}
+body main .home-error {
+  font-size: 0.8rem;
+  text-align: center;
+  font-weight: bold;
+}
+body main .home-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 40px;
+  margin-top: 50px;
+}
+body main .home-body form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  max-width: 250px;
+  width: 100%;
+}
+body main .home-body form > input {
+  display: none;
+}
+body main .home-body form > label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+body main .home-body form > label > span {
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-left: 10px;
+}
+body main .home-body form button {
+  height: 200px;
+  width: 100%;
+  border: 1px solid var(--primaryColor);
+  background-color: var(--primaryColor);
+  color: var(--whiteColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  font-size: 1rem;
+}
+body main .home-body form button:hover {
+  background-color: transparent;
+  color: var(--primaryColor);
+}
