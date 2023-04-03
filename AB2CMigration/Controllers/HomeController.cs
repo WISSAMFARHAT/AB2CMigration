@@ -21,69 +21,46 @@ namespace AB2CMigration.Controllers
         [Route("migration")]
         public async Task<IActionResult> Migration(IFormFile file)
         {
-            
-            try
+            if (file is null)
+                throw new ArgumentNullException(nameof(file));
+
+            List<UserModel> users = new();
+
+            using (var stream = new MemoryStream())
             {
+                file.CopyTo(stream);
+                stream.Position = 0;
 
-               // List<UserModel> model = await GraphProvider.Graph.GetAllUsers();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage pck = new(stream);
 
-                
-                if (file is null)
-                {
-                    throw new ArgumentNullException(nameof(file));
-                }
+                var worksheet = pck.Workbook.Worksheets[0];
 
-                List<UserModel> users = new();
-
-                using (var stream = new MemoryStream())
-                {
-                    file.CopyTo(stream);
-                    stream.Position = 0;
-
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    ExcelPackage pck = new(stream);
-
-                    var worksheet = pck.Workbook.Worksheets[0];
-
-                    users = ConvertToUsersModel(worksheet);
-
-                }
-
-                foreach(UserModel user in users)
-                {
-                    await GraphProvider.Cosmos.CreateUser(user);
-                }
-
-            }
-            catch (Exception ex) {
-                return RedirectToAction("Index");
+                users = ConvertToUsersModel(worksheet);
             }
 
+            foreach (UserModel user in users)
+                await GraphProvider.Cosmos.CreateUser(user);
 
             return RedirectToAction("Index");
         }
 
-        private List<UserModel> ConvertToUsersModel(ExcelWorksheet worksheet)
+        private static List<UserModel> ConvertToUsersModel(ExcelWorksheet worksheet)
         {
             List<UserModel> users = new();
 
-            for (int i = 2; i < worksheet.Dimension.End.Row-1; i++)
-            {
+            for (int i = 2; i < worksheet.Dimension.End.Row - 1; i++)
                 users.Add(new()
                 {
-                    DisplayName= worksheet.Cells[i, 1].Value?.ToString(),
+                    DisplayName = worksheet.Cells[i, 1].Value?.ToString(),
                     FirstName = worksheet.Cells[i, 2].Value?.ToString(),
                     LastName = worksheet.Cells[i, 3].Value?.ToString(),
                     ID = worksheet.Cells[i, 4].Value?.ToString(),
                     Email = worksheet.Cells[i, 5].Value?.ToString(),
                 });
 
-            }
-
             return users;
-
-
         }
-}
+    }
 
 }

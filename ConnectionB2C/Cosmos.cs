@@ -10,15 +10,15 @@ namespace ConnectionB2C
         {
             CosmosClient client = new(connectionString, new CosmosClientOptions() { SerializerOptions = new() { IgnoreNullValues = true } });
 
-            container = client.GetContainer(databaseId, containerId); 
+            container = client.GetContainer(databaseId, containerId);
         }
 
         public async Task CreateUser(UserModel user)
         {
             CloudUser selectedUser = new()
-            { 
-                ID=new Guid(user.ID),
-                FirstName =user.FirstName,
+            {
+                ID = new Guid(user.ID),
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 DisplayName = user.DisplayName,
                 Inputs = new()
@@ -27,7 +27,6 @@ namespace ConnectionB2C
                     {
                         Input = user.Email,
                         IsPrimary = true,
-                        IsValidated= true,
                         Providers = new()
                         {
                             new()
