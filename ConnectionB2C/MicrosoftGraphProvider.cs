@@ -59,7 +59,7 @@ namespace ConnectionB2C
             IGraphServiceUsersCollectionPage allUsers = await MicrosoftGraph.Users
                 .Request()
                 .Top(999)
-                .Select("id,displayname,createddatetime,mail,othermails,givenname,surname,authentication,authenticationinfo,outlook")
+                .Select("id,displayname,createddatetime,mail,othermails,givenname,surname,authentication,authenticationinfo,outlook,onpremiseslastsyncdatetime")
                 .GetAsync();
 
             List<UserModel> users = new();
@@ -72,8 +72,9 @@ namespace ConnectionB2C
                     Email = user.OtherMails.First(),
                     FirstName = user.GivenName,
                     LastName = user.Surname,
-                    DisplayName=user.DisplayName
-                    
+                    DisplayName=user.DisplayName,
+                    CreatedOn=user.CreatedDateTime,
+                    LastSignedIn=user.OnPremisesLastSyncDateTime
                 };
 
                 users.Add(newUser);

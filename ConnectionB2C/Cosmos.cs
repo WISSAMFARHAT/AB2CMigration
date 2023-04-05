@@ -1,5 +1,6 @@
-﻿using AngryMonkey.CloudLogin.DataContract;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
+
+using AngryMonkey.CloudLogin;
 
 namespace ConnectionB2C
 {
@@ -15,31 +16,28 @@ namespace ConnectionB2C
 
         public async Task CreateUser(UserModel user)
         {
-            CloudUser selectedUser = new()
+            Model.User selectedUser = new()
             {
                 ID = new Guid(user.ID),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DisplayName = user.DisplayName,
+                CreatedOn = user.CreatedOn ?? DateTime.UtcNow,
+                LastSignedIn = user.LastSignedIn ?? user.CreatedOn ?? DateTime.UtcNow,
+
                 Inputs = new()
                 {
                     new()
                     {
                         Input = user.Email,
+                        Format = InputFormat.EmailAddress,
                         IsPrimary = true,
-                        Providers = new()
-                        {
-                            new()
-                            {
-                                Code = "",
-                                Identifier = ""
-                            }
-                        }
+                        Providers = null
                     }
                 }
             };
 
-            await container.CreateItemAsync<CloudUser>(selectedUser);
+            await container.CreateItemAsync(selectedUser);
         }
     }
 }
